@@ -20,7 +20,6 @@ def test_dataset_requires_dataframe():
 def test_dataset_column():
     data = load_csv("examples/sample_data/test.csv")
     dataset = Dataset(data)
-
     assert isinstance(dataset.column("position"), np.ndarray)
     assert dataset.column("time").tolist() == [0.0, 0.1, 0.2, 0.3]
     assert dataset.column("position").tolist() == [0.12, 0.31, 0.54, 0.81]
@@ -28,5 +27,11 @@ def test_dataset_column():
 def test_dataset_columns():
     data = load_csv("examples/sample_data/test.csv")
     dataset = Dataset(data)
-
     assert dataset.columns() == ["time","position"]
+
+def test_independent():
+    data = load_csv("examples/sample_data/test.csv")
+    dataset = Dataset(data, independent_column="position")
+    assert dataset.independent().tolist() == [0.12, 0.31, 0.54, 0.81]
+    dataset.set_independent(0)
+    assert dataset.independent().tolist() == [0.0, 0.1, 0.2, 0.3]
